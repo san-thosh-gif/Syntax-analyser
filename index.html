@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syntax Analyser - Virtual Lab</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+        }
+        header {
+            background: linear-gradient(90deg, #1a1a2e, #16213e);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #e94560;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        header h1 {
+            font-size: 28px;
+            color: #e94560;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        header .subtitle {
+            font-size: 14px;
+            color: #a5a5a5;
+        }
+        .student-info {
+            text-align: right;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .student-info span {
+            color: #e94560;
+            font-weight: bold;
+        }
+        nav {
+            background: #16213e;
+            padding: 12px 40px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid #333;
+        }
+        nav a {
+            color: #e94560;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        nav a:hover, nav a.active {
+            background: #e94560;
+            color: #fff;
+            border-color: #e94560;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 40px 40px;
+        }
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #b0b0b0;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+        .hero a.btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #e94560, #c0392b);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+        .hero a.btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.6);
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            width: 320px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+            border-color: #e94560;
+        }
+        .card h3 {
+            color: #e94560;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .card p {
+            color: #999;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+        .section-desc {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .theory {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #1a1a2e;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-bottom: 40px;
+        }
+        .theory h3 {
+            color: #e94560;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .theory p, .theory li {
+            color: #bbb;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        .theory ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+        .theory table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .theory table th, .theory table td {
+            border: 1px solid #444;
+            padding: 10px 15px;
+            text-align: left;
+            color: #ccc;
+        }
+        .theory table th {
+            background: #e94560;
+            color: #fff;
+        }
+        .theory code {
+            background: #0f0f1a;
+            color: #00ff88;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        .theory pre {
+            background: #0f0f1a;
+            color: #00ff88;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #1a1a2e;
+            border-top: 2px solid #e94560;
+            color: #777;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        footer span {
+            color: #e94560;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Syntax Analyser</h1>
+            <div class="subtitle">Compiler Design - Virtual Lab</div>
+        </div>
+        <div class="student-info">
+            <div>Created by: <span>Santhosh</span></div>
+            <div>Register No: <span>2301010008</span></div>
+        </div>
+    </header>
+
+    <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="#theory">Theory</a>
+        <a href="#grammar">Grammar Rules</a>
+        <a href="#parsing-types">Parsing Types</a>
+        <a href="simulation.html">Simulation</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h2>Syntax Analyser</h2>
+        <p>
+            Explore the second phase of a compiler — the <strong>Syntax Analyser (Parser)</strong>.
+            Understand how a stream of tokens is validated against grammar rules and
+            structured into a <strong>Parse Tree</strong> that represents the syntactic structure of source code.
+        </p>
+        <a href="simulation.html" class="btn">Start Simulation</a>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="content">
+        <div class="card">
+            <h3>🌳 Parse Tree</h3>
+            <p>Constructs a hierarchical tree structure from tokens that represents the grammatical structure of the source program based on production rules.</p>
+        </div>
+        <div class="card">
+            <h3>📐 Grammar Validation</h3>
+            <p>Checks whether the sequence of tokens conforms to the Context-Free Grammar (CFG) rules defined for the programming language.</p>
+        </div>
+        <div class="card">
+            <h3>🚨 Error Detection</h3>
+            <p>Detects and reports syntax errors with meaningful messages, identifying where the input violates grammar rules and what was expected.</p>
+        </div>
+    </div>
+
+    <!-- Theory Section -->
+    <div id="theory" style="padding: 20px 40px;">
+        <h2 class="section-title">Theory</h2>
+        <p class="section-desc">Understanding the fundamentals of Syntax Analysis</p>
+
+        <div class="theory">
+            <h3>What is a Syntax Analyser?</h3>
+            <p>
+                A <strong>Syntax Analyser</strong> (also called a <em>Parser</em>) is the
+                second phase of a compiler. It takes the stream of tokens produced by the
+                Lexical Analyser and checks whether that token sequence can be generated by
+                the grammar of the source language. It organizes tokens into a
+                <strong>Parse Tree (Syntax Tree)</strong> that reflects the structure of the program.
+            </p>
+            <br>
+            <h3>Key Functions</h3>
+            <ul>
+                <li>Receives a token stream from the Lexical Analyser</li>
+                <li>Validates the token sequence against a Context-Free Grammar (CFG)</li>
+                <li>Builds a Parse Tree / Abstract Syntax Tree (AST)</li>
+                <li>Reports syntax errors with line numbers and expected tokens</li>
+                <li>Applies derivation rules (top-down or bottom-up)</li>
+                <li>Handles operator precedence and associativity</li>
+            </ul>
+            <br>
+            <h3>How It Works</h3>
+            <p>
+                The parser reads tokens one by one and tries to match them against the
+                <strong>production rules</strong> of the grammar. For example, given the grammar
+                rule <code>E → E + T | T</code>, the parser checks if the input can be derived
+                from the start symbol. If the input matches the grammar, a parse tree is built;
+                otherwise, a syntax error is reported.
+            </p>
+            <br>
+            <h3>Example</h3>
+            <p>For the expression <code>a + b * c</code>, the parser produces:</p>
+            <pre>
+        E
+       / \
+      E   T
+      |  /|\
+      T T * T
+      |  |   |
+      a  b   c
+            </pre>
+            <p style="margin-top:10px;">This tree respects operator precedence — multiplication binds tighter than addition.</p>
+        </div>
+    </div>
+
+    <!-- Grammar Rules Section -->
+    <div id="grammar" style="padding: 20px 40px;">
+        <h2 class="section-title">Grammar Rules</h2>
+        <p class="section-desc">Sample Context-Free Grammar used in the Syntax Analyser</p>
+
+        <div class="theory">
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Production Rule</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><code>E → E + T</code></td>
+                    <td>Expression is an Expression plus a Term (addition)</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>E → E - T</code></td>
+                    <td>Expression is an Expression minus a Term (subtraction)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>E → T</code></td>
+                    <td>Expression can be a single Term</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>T → T * F</code></td>
+                    <td>Term is a Term times a Factor (multiplication)</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>T → T / F</code></td>
+                    <td>Term is a Term divided by a Factor (division)</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><code>T → F</code></td>
+                    <td>Term can be a single Factor</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td><code>F → ( E )</code></td>
+                    <td>Factor is a parenthesized Expression</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td><code>F → id</code></td>
+                    <td>Factor is an identifier (variable name)</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td><code>F → num</code></td>
+                    <td>Factor is a numeric constant</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Parsing Types Section -->
+    <div id="parsing-types" style="padding: 20px 40px;">
+        <h2 class="section-title">Parsing Types</h2>
+        <p class="section-desc">Top-Down vs Bottom-Up parsing strategies</p>
+
+        <div class="theory">
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Top-Down Parsing</th>
+                    <th>Bottom-Up Parsing</th>
+                </tr>
+                <tr>
+                    <td>Direction</td>
+                    <td>Start symbol → Input string</td>
+                    <td>Input string → Start symbol</td>
+                </tr>
+                <tr>
+                    <td>Tree Construction</td>
+                    <td>Root to Leaves</td>
+                    <td>Leaves to Root</td>
+                </tr>
+                <tr>
+                    <td>Derivation</td>
+                    <td>Leftmost derivation</td>
+                    <td>Rightmost derivation (in reverse)</td>
+                </tr>
+                <tr>
+                    <td>Examples</td>
+                    <td>Recursive Descent, LL(1)</td>
+                    <td>Shift-Reduce, LR(0), SLR, LALR</td>
+                </tr>
+                <tr>
+                    <td>Used In</td>
+                    <td>Hand-written parsers</td>
+                    <td>Parser generators (yacc, bison)</td>
+                </tr>
+                <tr>
+                    <td>Power</td>
+                    <td>Less powerful (LL grammars)</td>
+                    <td>More powerful (LR grammars)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>Syntax Analyser Virtual Lab | Created by <span>Santhosh</span> | Reg No: <span>2301010008</span></p>
+        <p>&copy; 2025 Compiler Design Lab</p>
+    </footer>
+
+</body>
+</html>
